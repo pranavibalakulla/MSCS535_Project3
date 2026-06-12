@@ -53,6 +53,5 @@ The application will treat these as literal text, not SQL commands.
 
 In any text input field, try typing:
     <script>alert('XSS Attack')</script>
-    <img src=x onerror=alert(1)>
 
 The application will display these as harmless text strings.
