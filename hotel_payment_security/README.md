@@ -39,19 +39,7 @@ Visit http://127.0.0.1:5000 in your web browser.
         |-- success.html     (Booking confirmation page)
         |-- search.html      (Destination search with safe queries)
 
-## Security Features Demonstrated
 
-### SQL Injection Prevention (app.py)
-  - save_guest()           Line 87  - Parameterized INSERT for guest records
-  - save_booking()         Line 113 - Parameterized INSERT for bookings
-  - get_booking()          Line 133 - Parameterized SELECT by ID
-  - search_bookings()      Line 154 - Parameterized LIKE search
-  - process_payment()      Line 180 - Parameterized INSERT and UPDATE
-
-### XSS Prevention (app.py)
-  - sanitize_input()       Line 200 - HTML-encodes all special characters
-  - set_security_headers() Line 263 - Content-Security-Policy on all responses
-  - validate_payment_form() Line 245 - Input format validation before storage
 
 ## How to Test SQL Injection Prevention
 
