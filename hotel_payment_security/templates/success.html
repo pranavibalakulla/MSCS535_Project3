@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Booking Confirmed | SecureStay{% endblock %}
+{% block content %}
+<div class="card" style="text-align:center;">
+    <div style="font-size:4rem; margin-bottom:16px;">&#10003;</div>
+    <h2 style="color:#15803d;">Booking Confirmed!</h2>
+    <p class="subtitle">Your payment has been securely processed.</p>
+    {% if booking %}
+    <div style="background:#f0fdf4; border-radius:10px; padding:20px; margin:24px 0; text-align:left;">
+        <p><strong>Booking ID:</strong> #{{ booking_id }}</p>
+        <p><strong>Hotel:</strong> {{ booking['hotel_name'] }}</p>
+        <p><strong>Destination:</strong> {{ booking['destination'] }}</p>
+        <p><strong>Check-In:</strong> {{ booking['check_in'] }}</p>
+        <p><strong>Check-Out:</strong> {{ booking['check_out'] }}</p>
+        <p><strong>Room Type:</strong> {{ booking['room_type'] | title }}</p>
+        <p><strong>Total Paid:</strong> ${{ booking['total_amount'] | int }}</p>
+    </div>
+    {% endif %}
+    <a href="/" style="display:inline-block; background:linear-gradient(135deg,#1a3a5c,#2d6a9f);
+       color:white; text-decoration:none; padding:12px 28px; border-radius:8px; font-weight:600; margin-top:8px;">
+       Return to Home
+    </a>
+</div>
+{% endblock %}

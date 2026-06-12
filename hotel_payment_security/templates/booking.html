@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Book a Hotel | SecureStay{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>Hotel Booking Form</h2>
+    <p class="subtitle">Enter your travel details below. All inputs are sanitized to prevent XSS attacks.</p>
+
+    <div class="security-badge">
+        <span>&#128274;</span> Secured with HTML encoding and CSRF protection
+    </div>
+
+    {% if error %}
+    <div class="alert-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="/booking">
+        <!-- CSRF Token: hidden field protects against cross-site request forgery -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        <h3 style="color:#1a3a5c; margin-bottom:16px; font-size:1rem;">Guest Information</h3>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required
+                       placeholder="e.g. Jane Smith" maxlength="100">
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required
+                       placeholder="jane@example.com" maxlength="150">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone"
+                   placeholder="+1-555-0100" maxlength="20">
+        </div>
+
+        <h3 style="color:#1a3a5c; margin: 24px 0 16px; font-size:1rem;">Booking Details</h3>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="hotel_name">Hotel Name</label>
+                <input type="text" id="hotel_name" name="hotel_name" required
+                       placeholder="e.g. Grand Azure Resort" maxlength="150">
+            </div>
+            <div class="form-group">
+                <label for="destination">Destination City</label>
+                <input type="text" id="destination" name="destination" required
+                       placeholder="e.g. Paris, France" maxlength="100">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="check_in">Check-In Date</label>
+                <input type="date" id="check_in" name="check_in" required>
+            </div>
+            <div class="form-group">
+                <label for="check_out">Check-Out Date</label>
+                <input type="date" id="check_out" name="check_out" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="room_type">Room Type</label>
+                <select id="room_type" name="room_type" required>
+                    <option value="">Select a room type</option>
+                    <option value="standard">Standard Room ($150/night)</option>
+                    <option value="deluxe">Deluxe Room ($250/night)</option>
+                    <option value="suite">Suite ($450/night)</option>
+                    <option value="presidential">Presidential Suite ($800/night)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="num_guests">Number of Guests</label>
+                <input type="number" id="num_guests" name="num_guests"
+                       min="1" max="10" value="1" required>
+            </div>
+        </div>
+
+        <button type="submit" class="btn">Continue to Payment</button>
+    </form>
+</div>
+{% endblock %}

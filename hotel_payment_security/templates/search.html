@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Search Destinations | SecureStay{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>Search Destinations</h2>
+    <p class="subtitle">
+        Search uses a parameterized SQL LIKE query (SQL injection prevention) and
+        the search term is HTML-encoded before display (XSS prevention).
+    </p>
+
+    <form method="GET" action="/search" style="display:flex; gap:12px; margin-bottom:24px;">
+        <input type="text" name="q" placeholder="Search by destination (e.g. Paris, Tokyo)"
+               value="{{ search_term }}" style="flex:1;" maxlength="100">
+        <button type="submit" class="btn" style="width:auto; margin-top:0; padding:10px 24px;">
+            Search
+        </button>
+    </form>
+
+    {% if search_term %}
+    <div style="background:#f8fbff; border-radius:8px; padding:12px 16px; margin-bottom:20px; font-size:0.9rem; color:#555;">
+        <!--
+            XSS Prevention: {{ search_term }} is auto-escaped by Jinja2.
+            Even if the user typed <script>alert(1)</script>,
+            it renders as safe text: &lt;script&gt;alert(1)&lt;/script&gt;
+        -->
+        Showing results for: <strong>{{ search_term }}</strong>
+    </div>
+
+    {% if results %}
+    <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+            <thead>
+                <tr style="background:#1a3a5c; color:white;">
+                    <th style="padding:12px 16px; text-align:left;">ID</th>
+                    <th style="padding:12px 16px; text-align:left;">Hotel</th>
+                    <th style="padding:12px 16px; text-align:left;">Destination</th>
+                    <th style="padding:12px 16px; text-align:left;">Room Type</th>
+                    <th style="padding:12px 16px; text-align:left;">Status</th>
+                    <th style="padding:12px 16px; text-align:left;">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in results %}
+                <tr style="border-bottom:1px solid #e8f0fa;">
+                    <!-- All values auto-escaped by Jinja2 to prevent XSS -->
+                    <td style="padding:10px 16px;">#{{ row['id'] }}</td>
+                    <td style="padding:10px 16px;">{{ row['hotel_name'] }}</td>
+                    <td style="padding:10px 16px;">{{ row['destination'] }}</td>
+                    <td style="padding:10px 16px;">{{ row['room_type'] | title }}</td>
+                    <td style="padding:10px 16px;">
+                        <span style="background:{% if row['payment_status'] == 'paid' %}#dcfce7; color:#15803d{% else %}#fef3c7; color:#92400e{% endif %};
+                                     padding:3px 10px; border-radius:12px; font-size:0.8rem; font-weight:600;">
+                            {{ row['payment_status'] | title }}
+                        </span>
+                    </td>
+                    <td style="padding:10px 16px;">${{ row['total_amount'] | int }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert-error">No bookings found for destination "{{ search_term }}".</div>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

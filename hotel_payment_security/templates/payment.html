@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Secure Payment | SecureStay{% endblock %}
+{% block content %}
+
+{% if booking %}
+<div class="card" style="margin-bottom:16px; background:#f8fbff;">
+    <h2>Booking Summary</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-top:16px;">
+        <div>
+            <span style="font-size:0.8rem;color:#888;">Hotel</span>
+            <!-- XSS Prevention: Jinja2 auto-escapes all template variables by default -->
+            <p style="font-weight:600; color:#1a3a5c;">{{ booking['hotel_name'] }}</p>
+        </div>
+        <div>
+            <span style="font-size:0.8rem;color:#888;">Destination</span>
+            <p style="font-weight:600; color:#1a3a5c;">{{ booking['destination'] }}</p>
+        </div>
+        <div>
+            <span style="font-size:0.8rem;color:#888;">Room Type</span>
+            <p style="font-weight:600; color:#1a3a5c;">{{ booking['room_type'] | title }}</p>
+        </div>
+        <div>
+            <span style="font-size:0.8rem;color:#888;">Check-In</span>
+            <p style="font-weight:600;">{{ booking['check_in'] }}</p>
+        </div>
+        <div>
+            <span style="font-size:0.8rem;color:#888;">Check-Out</span>
+            <p style="font-weight:600;">{{ booking['check_out'] }}</p>
+        </div>
+        <div>
+            <span style="font-size:0.8rem;color:#888;">Amount Due</span>
+            <p style="font-weight:700; color:#15803d; font-size:1.1rem;">
+                ${{ booking['total_amount'] | int }}
+            </p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="card">
+    <h2>Secure Payment</h2>
+    <p class="subtitle">Your payment information is protected. Card details are validated and never stored in full.</p>
+
+    <div class="security-badge">
+        <span>&#128274;</span> SSL Encrypted &nbsp;|&nbsp; CSRF Protected &nbsp;|&nbsp; PCI DSS Compliant
+    </div>
+
+    {% if errors %}
+    <div class="alert-error">
+        <strong>Please fix the following errors:</strong>
+        <ul style="margin-top:8px; padding-left:20px;">
+            {% for error in errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <form method="POST" action="/payment">
+        <!-- CSRF Token prevents cross-site request forgery -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        <div class="form-group">
+            <label for="cardholder_name">Cardholder Name</label>
+            <!--
+                XSS Prevention Note:
+                Input typed here will be sanitized by sanitize_input() in app.py
+                before being stored or rendered anywhere in the application.
+            -->
+            <input type="text" id="cardholder_name" name="cardholder_name" required
+                   placeholder="Name as it appears on card" maxlength="100"
+                   autocomplete="cc-name">
+        </div>
+
+        <div class="form-group">
+            <label for="card_number">Card Number</label>
+            <input type="text" id="card_number" name="card_number" required
+                   placeholder="1234 5678 9012 3456" maxlength="19"
+                   autocomplete="cc-number">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="expiry">Expiry Date</label>
+                <input type="text" id="expiry" name="expiry" required
+                       placeholder="MM/YY" maxlength="5"
+                       autocomplete="cc-exp">
+            </div>
+            <div class="form-group">
+                <label for="cvv">CVV</label>
+                <input type="password" id="cvv" name="cvv" required
+                       placeholder="123" maxlength="4"
+                       autocomplete="cc-csc">
+            </div>
+        </div>
+
+        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:12px; margin-bottom:20px; font-size:0.85rem; color:#92400e;">
+            <strong>Security Note:</strong> Only the last 4 digits of your card number will be stored.
+            All inputs are HTML-encoded to prevent script injection.
+        </div>
+
+        <button type="submit" class="btn">Complete Booking &amp; Pay</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Home | SecureStay Hotels{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>Welcome to SecureStay Hotels and Travel</h2>
+    <p class="subtitle">This application demonstrates secure payment processing for a hotel and travel booking system.</p>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px;">
+        <div style="background:#f0f7ff; border-radius:10px; padding:20px;">
+            <h3 style="color:#1a3a5c; margin-bottom:8px;">SQL Injection Prevention</h3>
+            <p style="font-size:0.9rem; color:#555;">All database queries use parameterized statements.
+            User input is never concatenated into SQL strings.</p>
+        </div>
+        <div style="background:#f0fdf4; border-radius:10px; padding:20px;">
+            <h3 style="color:#15803d; margin-bottom:8px;">XSS Prevention</h3>
+            <p style="font-size:0.9rem; color:#555;">All user input is HTML-encoded before storage and display.
+            Content Security Policy headers block script injection.</p>
+        </div>
+    </div>
+    <div style="margin-top:24px; display:flex; gap:12px;">
+        <a href="/booking" style="flex:1; text-align:center; background:linear-gradient(135deg,#1a3a5c,#2d6a9f);
+           color:white; text-decoration:none; padding:14px; border-radius:8px; font-weight:600;">
+           Book a Hotel Now
+        </a>
+        <a href="/search" style="flex:1; text-align:center; background:#e8f0fa;
+           color:#1a3a5c; text-decoration:none; padding:14px; border-radius:8px; font-weight:600;">
+           Search Destinations
+        </a>
+    </div>
+</div>
+{% endblock %}
